@@ -143,6 +143,28 @@ VITE_API_BASE_URL=http://localhost:5001
 - **API key protection** through environment variables
 - **CORS configuration** for secure cross-origin requests
 
+## 🚀 Deployment & CI/CD
+
+KavachKYC supports automated deployment with continuous integration and delivery:
+
+### **Production Architecture**
+- **Backend**: Google Cloud Run with Docker containerization
+- **Frontend**: Firebase Hosting with optimized builds
+- **CI/CD**: Automated deployments via GitHub Actions and Cloud Build
+- **Environment Management**: Secure API key handling and environment variables
+
+### **Automated Deployment Flow**
+```
+GitHub Push → Triggers → Backend (Cloud Build → Cloud Run) + Frontend (GitHub Actions → Firebase)
+```
+
+### **Key Benefits**
+- **Zero-downtime deployments** with automatic rollbacks
+- **Environment synchronization** between frontend and backend
+- **Scalable infrastructure** with pay-per-use pricing
+- **Global CDN distribution** via Firebase Hosting
+- **Container orchestration** with Cloud Run auto-scaling
+
 ## 🔮 Future Enhancements
 
 - **Database integration** with Supabase for validation history
@@ -150,8 +172,8 @@ VITE_API_BASE_URL=http://localhost:5001
 - **Batch processing** for enterprise-scale document validation
 - **Advanced fraud detection** with machine learning models
 - **API documentation** with OpenAPI/Swagger
-- **Docker containerization** for easy deployment
 - **Real-time notifications** for validation status updates
+- **Multi-region deployment** for global availability
 
 ## 🤝 Contributing
 
