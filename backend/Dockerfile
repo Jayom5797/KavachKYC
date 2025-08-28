@@ -1,33 +1,41 @@
-# Use Node.js 18 Alpine for smaller image size
-FROM node:18-alpine
+# ===== Build Stage =====
+FROM node:18 AS build
 
-# Set working directory
 WORKDIR /app
 
-# Copy package files
+# Copy package files and install all dependencies
 COPY package*.json ./
+RUN npm install
+
+# Copy the rest of the source code
+COPY . .
+
+# Build the TypeScript project
+RUN npm run build
+
+# ===== Production Stage =====
+FROM node:18-alpine
+
+WORKDIR /app
 
 # Install curl for health checks
 RUN apk add --no-cache curl
 
-# Install all dependencies (including dev dependencies for build)
-RUN npm install
+# Copy only the production dependencies from the build stage
+COPY --from=build /app/node_modules ./node_modules
 
-# Copy source code
-COPY . .
+# Copy the built code from the build stage
+COPY --from=build /app/dist ./dist
 
-# Build TypeScript
-RUN npm run build
+# Copy package.json for the start script
+COPY --from=build /app/package.json ./
 
-# Remove dev dependencies to reduce image size
-RUN npm prune --production
-
-# Expose port
+# Expose the port the app runs on
 EXPOSE 8080
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+# Health check for the service
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD curl -f http://localhost:8080/health || exit 1
 
-# Start the application
+# Command to run the application
 CMD ["npm", "start"]
