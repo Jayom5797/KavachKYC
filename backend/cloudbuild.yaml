@@ -24,7 +24,7 @@ steps:
       - '--port'
       - '8080'
       - '--set-env-vars'
-      - 'NODE_ENV=production'
+      - 'NODE_ENV=production,OCR_SPACE_API_KEY=${K81741576788957},GOOGLE_GEMINI_API_KEY=${AIzaSyDLI8lIU1gnkfNVAK4nIUcQ03GmikqsvkI}'
       - '--memory'
       - '1Gi'
       - '--cpu'
