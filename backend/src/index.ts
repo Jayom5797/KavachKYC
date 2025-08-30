@@ -1,6 +1,8 @@
 import 'dotenv/config';
 import express from 'express';
 import cors, { CorsOptions } from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import validateRouter from './routes/validate.js';
 
 const app = express();
@@ -26,6 +28,9 @@ const corsOptions: CorsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+// Serve static files from the 'public' directory (for the frontend)
+app.use(express.static('public'));
+
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
@@ -35,6 +40,13 @@ app.get('/api/health', (_req, res) => {
 });
 
 app.use('/api', validateRouter);
+
+// Handle SPA routing by serving index.html for all non-API routes
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+});
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 5001;
 app.listen(PORT, () => {

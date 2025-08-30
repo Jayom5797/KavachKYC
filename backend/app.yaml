@@ -1,0 +1,19 @@
+runtime: nodejs18
+
+instance_class: F1
+
+env_variables:
+  NODE_ENV: 'production'
+  OCR_SPACE_API_KEY: '${_OCR_SPACE_API_KEY}'
+  GOOGLE_GEMINI_API_KEY: '${_GOOGLE_GEMINI_API_KEY}'
+
+handlers:
+  # Serve all static files from the public folder
+  - url: /(.*)
+    static_files: public/\1
+    upload: public/(.*)
+
+  # All other routes are handled by the Node.js app
+  - url: /api/.*
+    script: auto
+    secure: always

@@ -1,0 +1,30 @@
+steps:
+  # 1. Build the Frontend
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['install']
+    dir: 'frontend'
+
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['run', 'build']
+    dir: 'frontend'
+
+  # 2. Prepare the Backend
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['install']
+    dir: 'backend'
+
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['run', 'build']
+    dir: 'backend'
+
+  # 3. Create public directory and copy frontend build
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - 'mkdir -p backend/public && cp -r frontend/dist/* backend/public/'
+
+  # 4. Deploy to App Engine
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['app', 'deploy', 'backend/app.yaml']
+    timeout: '1600s'
